@@ -1,56 +1,96 @@
-// Minuteur
-const timerElement = document.getElementById('timer');
-let temps = localStorage.getItem('timer');
+// TIMER //
+const timerElement = document.getElementById("timer");
 
-if (!temps) {
-    temps = 300;
-    localStorage.setItem('timer', temps);
-}else {
-    temps = parseInt(temps, 10);
+let tempsStocke = localStorage.getItem("timer");
+
+if (tempsStocke === null) {
+    tempsStocke = 300;
+    localStorage.setItem("timer", tempsStocke);
 }
 
-function updateTimer() {
-    let minutes = parseInt(temps / 60, 10);
-    let secondes = parseInt(temps % 60, 10); 
+let temps = parseInt(tempsStocke);
 
-    let m = minutes;
-    let s = secondes;
+// mm:ss //
+function afficherTemps(secondes) {
+    let minutes = Math.floor(secondes / 60);
+    let resteSecondes = secondes % 60;
 
-    if (secondes < 10) {
-        s = "0" + secondes;
-    }
+    if (minutes < 10) minutes = "0" + minutes;
+    if (resteSecondes < 10) resteSecondes = "0" + resteSecondes;
 
-    if (minutes < 10) {
-        m = "0" + minutes;
-    }  
+    return minutes + ":" + resteSecondes;
+}
 
-    if (temps <= 0 ) {
+// Décompte //
+let timer = setInterval(function () {
+
+    if (temps <= 0) {
         clearInterval(timer);
         timerElement.textContent = "00:00";
-        document.getElementById('message').innerHTML='<h2>Temps écoulé ! Vous avez perdu !</h2>';
+        document.getElementById("message").innerHTML =
+            "<h3>Temps écoulé ! Vous avez perdu !</h3>";
         return;
     }
 
-    timerElement.textContent = m + ":" + s;
-    temps--; 
-};
+    timerElement.textContent = afficherTemps(temps);
+    temps--;
+    localStorage.setItem("timer", temps);
 
-let timer = setInterval(updateTimer,1000);
+}, 1000);
 
+// MOT DE PASSE //
 
-// Vérification du mot de passe
-if (!localStorage.getItem("mdp")) {
-    localStorage.setItem("mdp", "escape1234");
+if (localStorage.getItem("mdp") === null) {
+    localStorage.setItem("mdp", "escape");
 }
 
-document.getElementById('mdpbutton').addEventListener('click', function() {
-    const inputMdp = document.getElementById('mdpInput').value;
-    const mdpStorage = localStorage.getItem('mdp');
+let motDePasse = localStorage.getItem("mdp");
 
-    if (inputMdp === mdpStorage) {
-        clearInterval(timer)
-        document.getElementById('message').innerHTML = "<h2>Bravo ! Vous avez réussi.</h2>";
+let mdpCases = document.getElementById("mdpCases");
+
+for (let i = 0; i < motDePasse.length; i++) {
+    let input = document.createElement("input");
+    input.type = "text";
+    input.maxLength = 1;
+    input.className = "mdpCase";
+    mdpCases.appendChild(input);
+}
+
+let inputs = document.querySelectorAll(".mdpCase");
+
+for (let i = 0; i < inputs.length; i++) {
+
+    inputs[i].addEventListener("input", function () {
+        inputs[i].value = inputs[i].value.toLowerCase();
+
+        if (inputs[i].value !== "" && inputs[i + 1]) {
+            inputs[i + 1].focus();
+        }
+    });
+
+    inputs[i].addEventListener("keydown", function (event) {
+        if (event.key === "Backspace" && inputs[i].value === "" && inputs[i - 1]) {
+            inputs[i - 1].focus();
+        }
+    });
+}
+
+// Vérification MDP
+document.getElementById("mdpbutton").addEventListener("click", function () {
+
+    let saisie = "";
+
+    for (let i = 0; i < inputs.length; i++) {
+        saisie += inputs[i].value;
+    }
+
+    if (saisie === motDePasse) {
+        clearInterval(timer);
+        localStorage.removeItem("timer");
+        document.getElementById("message").innerHTML =
+            "<h2>Bravo ! Vous avez réussi.</h2>";
     } else {
-        document.getElementById('message').innerHTML = "<p>Mauvais mot de passe !</p>";
+        document.getElementById("message").innerHTML =
+            "<p>Mauvais mot de passe !</p>";
     }
 });

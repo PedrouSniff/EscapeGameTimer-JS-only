@@ -2,20 +2,26 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/style.css">
     <title>Modifier le mot de passe</title>
 </head>
     <body>
-        <h2>Changer le mot de passe</h2>
+        <section id="modif">
+            <h2>Changer le mot de passe</h2>
 
-        <input type="text" id="nouveauMdp" placeholder="Nouveau mot de passe">
-        <input type="number" id="nouveauTimer" placeholder="Nouveau temps (secondes)">
-        <button id="saveMdp">Enregistrer</button>
+            <input type="text" id="nouveauMdp" placeholder="Nouveau mot de passe">
+            <input type="number" id="nouveauTimer" placeholder="Nouveau temps (secondes)">
+            <button id="saveMdp">Sauvegarder</button>
 
-        <p id="confirmation"></p>
+            <p id="confirmation"></p>
 
-        <p>Mot de passe actuel : <span id="mdpActuel"></span></p>
-        <p>Timer actuel : <span id="timerActuel"></span> secondes</p>
-
+            <div id="infosActuelles">            
+                <p>Mot de passe actuel : <span id="mdpActuel"></span></p>
+                <p>Timer actuel : <span id="timerActuel"></span></p>
+            </div>
+            
+        </section>
         <script src="../assets/mdptimermodif.js"></script>
     </body>
 </html>
