@@ -1,6 +1,6 @@
 // TIMER //
-const timerElement = document.getElementById("timer");
 
+const timerElement = document.getElementById("timer");
 let tempsStocke = localStorage.getItem("timer");
 
 if (tempsStocke === null) {
@@ -8,20 +8,24 @@ if (tempsStocke === null) {
     localStorage.setItem("timer", tempsStocke);
 }
 
-let temps = parseInt(tempsStocke);
+let temps = parseInt(tempsStocke, 10);
 
-// mm:ss //
+// mm:ss
 function afficherTemps(secondes) {
     let minutes = Math.floor(secondes / 60);
     let resteSecondes = secondes % 60;
 
-    if (minutes < 10) minutes = "0" + minutes;
-    if (resteSecondes < 10) resteSecondes = "0" + resteSecondes;
+    if (minutes < 10) {
+        minutes = "0" + minutes
+    };
+    if (resteSecondes < 10) {
+        resteSecondes = "0" + resteSecondes
+    };
 
     return minutes + ":" + resteSecondes;
 }
 
-// Décompte //
+// mise à jour temps
 let timer = setInterval(function () {
 
     if (temps <= 0) {
@@ -38,26 +42,18 @@ let timer = setInterval(function () {
 
 }, 1000);
 
+
 // MOT DE PASSE //
 
 if (localStorage.getItem("mdp") === null) {
-    localStorage.setItem("mdp", "escape");
+    localStorage.setItem("mdp", "escape2024");
 }
 
 let motDePasse = localStorage.getItem("mdp");
-
-let mdpCases = document.getElementById("mdpCases");
-
-for (let i = 0; i < motDePasse.length; i++) {
-    let input = document.createElement("input");
-    input.type = "text";
-    input.maxLength = 1;
-    input.className = "mdpCase";
-    mdpCases.appendChild(input);
-}
-
 let inputs = document.querySelectorAll(".mdpCase");
 
+
+// Navigation automatique entre les cases
 for (let i = 0; i < inputs.length; i++) {
 
     inputs[i].addEventListener("input", function () {
@@ -68,6 +64,7 @@ for (let i = 0; i < inputs.length; i++) {
         }
     });
 
+    // Retour arrière avec backspace
     inputs[i].addEventListener("keydown", function (event) {
         if (event.key === "Backspace" && inputs[i].value === "" && inputs[i - 1]) {
             inputs[i - 1].focus();
@@ -75,7 +72,8 @@ for (let i = 0; i < inputs.length; i++) {
     });
 }
 
-// Vérification MDP
+
+// Vérification du mot de passe
 document.getElementById("mdpbutton").addEventListener("click", function () {
 
     let saisie = "";
@@ -87,6 +85,7 @@ document.getElementById("mdpbutton").addEventListener("click", function () {
     if (saisie === motDePasse) {
         clearInterval(timer);
         localStorage.removeItem("timer");
+
         document.getElementById("message").innerHTML =
             "<h2>Bravo ! Vous avez réussi.</h2>";
     } else {
